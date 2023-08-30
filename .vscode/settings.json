@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "vector": "c",
-        "stdlib.h": "c",
-        "parser.h": "c",
-        "string.h": "c"
-    }
-}
