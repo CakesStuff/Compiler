@@ -22,7 +22,15 @@ NodeTerm* parse_term(Token* tokens, int* index)
         term->var = term_int_lit;
         return term;
     }
-    //else if(ident_case)
+    else if(tokens[*index].type == TOKEN_IDENT)
+    {
+        NodeTermIdent* term_ident = aalloc(sizeof(NodeTermIdent));
+        term_ident->ident = tokens[(*index)++];
+        NodeTerm* term = aalloc(sizeof(NodeTerm));
+        term->type = NODE_TERM_IDENT;
+        term->var = term_ident;
+        return term;
+    }
     else
     {
         printf("Unrecognized term at line ~%d.\n", tokens[*index].line);
@@ -37,13 +45,35 @@ NodeExpr* parse_expr(Token* tokens, int* index)
     {
         return NULL;
     }
-    //check for binExpr
-    //if(...){}
-    //else {
-    NodeExpr* expr = aalloc(sizeof(NodeExpr));
-    expr->type = NODE_EXPR_TERM;
-    expr->var = term;
-    return expr;
+    if(tokens[*index].type == TOKEN_PLUS)
+    {
+        (*index)++;
+        NodeBinExpr* bin_expr = aalloc(sizeof(NodeBinExpr));
+        NodeBinExprAdd* bin_expr_add = aalloc(sizeof(NodeBinExprAdd));
+        NodeExpr* lhs = aalloc(sizeof(NodeExpr));
+        lhs->type = NODE_EXPR_TERM;
+        lhs->var = term;
+        bin_expr_add->lhs = lhs;
+        NodeExpr* rhs = parse_expr(tokens, index);
+        if(rhs == NULL)
+        {
+            return NULL;
+        }
+        bin_expr_add->rhs = rhs;
+        bin_expr->type = NODE_BIN_EXPR_ADD;
+        bin_expr->var = bin_expr_add;
+        NodeExpr* expr = aalloc(sizeof(NodeExpr));
+        expr->type = NODE_EXPR_BIN_EXPR;
+        expr->var = bin_expr;
+        return expr;
+    }
+    else
+    {
+        NodeExpr* expr = aalloc(sizeof(NodeExpr));
+        expr->type = NODE_EXPR_TERM;
+        expr->var = term;
+        return expr;
+    }
 }
 
 NodeProg parse(Token* tokens)
@@ -80,7 +110,27 @@ NodeProg parse(Token* tokens)
                 return ret;
             }
         }
-        //else if( LET ASSIGNMENT
+        else if(tokens[index].type == TOKEN_LET && tokens[index + 1].type == TOKEN_IDENT && tokens[index + 2].type == TOKEN_EQ)
+        {
+            index++;
+            NodeStmtLet* stmt_let = aalloc(sizeof(NodeStmtLet));
+            stmt_let->ident = tokens[index++];
+            index++;
+            stmt_let->expr = parse_expr(tokens, &index);
+            if(stmt_let->expr == NULL)
+            {
+                NodeProg ret = {NULL};
+                return ret;
+            }
+            if(tokens[index++].type != TOKEN_SEMI)
+            {
+                printf("Expected ';' in line %d.\n", tokens[index - 1].line);
+                NodeProg ret = {NULL};
+                return ret;
+            }
+            NodeStmt stmt = {NODE_STMT_LET, stmt_let};
+            ADD_STMT(stmt);
+        }
         else
         {
             printf("Unrecognized sequence starting with node %d at line %d.\n", tokens[index].type, tokens[index].line);

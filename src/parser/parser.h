@@ -6,11 +6,24 @@ typedef struct {
     Token int_lit;
 } NodeTermIntLit;
 
-//NodeBinExprAdd
+typedef struct {
+    Token ident;
+} NodeTermIdent;
 
-//NodeBinExpr
+typedef struct {
+    void* lhs;
+    void* rhs;
+} NodeBinExprAdd;
 
-//NodeTermIdent
+//typedef struct {
+//    void* lhs;
+//    void* rhs;
+//} NodeBinExprMul;
+
+typedef struct {
+    int type;
+    void* var;
+} NodeBinExpr;
 
 typedef struct {
     int type;
@@ -26,7 +39,10 @@ typedef struct {
     NodeExpr* expr;
 } NodeStmtExit;
 
-//NodeStmtLet
+typedef struct {
+    Token ident;
+    NodeExpr* expr;
+} NodeStmtLet;
 
 typedef struct {
     int type;
@@ -38,19 +54,24 @@ typedef struct {
     int count;
 } NodeProg;
 
+enum NodeBinExprOptions {
+    NODE_BIN_EXPR_ADD,
+    //NODE_BIN_EXPR_MUL
+};
+
 enum NodeTermOptions {
     NODE_TERM_INT_LIT,
-    //NODE_TERM_IDENT,
+    NODE_TERM_IDENT,
 };
 
 enum NodeExprOptions {
     NODE_EXPR_TERM,
-    //NODE_EXPR_BIN_EXPR,
+    NODE_EXPR_BIN_EXPR,
 };
 
 enum NodeStmtOptions {
     NODE_STMT_EXIT,
-    //NODE_STMT_LET,
+    NODE_STMT_LET,
 };
 
 NodeProg parse(Token* tokens);

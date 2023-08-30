@@ -7,6 +7,10 @@ typedef enum {
     TOKEN_END,
     TOKEN_OPENP,
     TOKEN_CLOSEP,
+    TOKEN_IDENT,
+    TOKEN_LET,
+    TOKEN_EQ,
+    TOKEN_PLUS,
 } TokenType;
 
 typedef struct {

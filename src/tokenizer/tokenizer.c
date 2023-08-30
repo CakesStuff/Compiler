@@ -48,13 +48,18 @@ Token* tokenize(char* src, int length)
             }
             else if(!strcmp(buffer, "let"))
             {
-                //TODO LET
+                Token token = {TOKEN_LET, "\0"};
+                token.line = line;
+                ADD_TOKEN(token);
                 buf_index = 0;
                 continue;
             }
             else
             {
-                //TODO IDENT
+                Token token = {TOKEN_IDENT};
+                token.line = line;
+                strcpy(token.value, buffer);
+                ADD_TOKEN(token);
                 buf_index = 0;
                 continue;
             }
@@ -87,6 +92,16 @@ Token* tokenize(char* src, int length)
         else if(src[index] == ')')
         {
             ADD_TOKEN_TYPE(TOKEN_CLOSEP);
+            continue;
+        }
+        else if(src[index] == '=')
+        {
+            ADD_TOKEN_TYPE(TOKEN_EQ);
+            continue;
+        }
+        else if(src[index] == '+')
+        {
+            ADD_TOKEN_TYPE(TOKEN_PLUS);
             continue;
         }
         else if(src[index] == '\n')
