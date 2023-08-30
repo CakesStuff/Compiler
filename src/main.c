@@ -7,7 +7,6 @@
 
 int main(int argc, char* argv[])
 {
-    //TODO: CHANGE USAGE
     if(argc != 3)
     {
         printf("Usage: %s <source> <out>\n", argv[0]);
@@ -27,7 +26,7 @@ int main(int argc, char* argv[])
 
     if(size == 0)
     {
-        printf("File is empty.\n");
+        printf("File %s is empty.\n", argv[1]);
         return 3;
     }
 
@@ -50,12 +49,15 @@ int main(int argc, char* argv[])
         return 5;
     }
 
+    ainit();
+
     //PARSER
     NodeProg program = parse(tokens);
     if(program.stmts == NULL)
     {
         printf("Unable to parse.\n");
         free(tokens);
+        aclose();
         return 6;
     }
 

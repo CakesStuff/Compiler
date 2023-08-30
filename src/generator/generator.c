@@ -80,7 +80,7 @@ void gen_prog(NodeProg prog, FILE* outfile)
         gen_stmt(prog.stmts[i], outfile, &stack_s);
     }
 
-    WRITEOUT("    mov rax, 60\nmov rdi, 0\nsyscall\n");
+    WRITEOUT("    mov rax, 60\n    mov rdi, 0\n    syscall\n");
 
     printf("Generation finished.\n");
 }

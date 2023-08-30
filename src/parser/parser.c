@@ -49,7 +49,6 @@ NodeExpr* parse_expr(Token* tokens, int* index)
 NodeProg parse(Token* tokens)
 {
     printf("Starting parsing...\n");
-    ainit();
     int index = 0;
     int capacity = 8;
     NodeProg prog = {malloc(sizeof(NodeStmt) * capacity), 0};
