@@ -10,7 +10,7 @@ always:
 
 compiler: build/compiler
 
-build/compiler: $(SOURCES_C)
+build/compiler: $(SOURCES_C) $(HEADERS_C)
 	@clang -o build/compiler $^
 
 clean:
