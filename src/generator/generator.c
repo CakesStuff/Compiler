@@ -57,7 +57,7 @@ void gen_term(NodeTerm* term, FILE* outfile, int* stack_s, Vars* vars)
             }
             WRITEOUT("    push QWORD [rsp + ");
             char buffer[20];
-            sprintf(buffer, "%d", ((*stack_s) - I->loc - 1) * 8);
+            sprintf(buffer, "%d", ((*stack_s)++ - I->loc - 1) * 8);
             fwrite(buffer, strlen(buffer), 1, outfile);
             WRITEOUT("]\n");
             return;
@@ -90,8 +90,17 @@ void gen_expr(NodeExpr* expr, FILE* outfile, int* stack_s, Vars* vars)
                     GENPUSH("rax");
                     return;
                 }
-                //case NODE_BIN_EXPR_MUL:
-                //    return;
+                case NODE_BIN_EXPR_MUL:
+                {
+                    NodeBinExprMul* bin_expr_mul = (NodeBinExprMul*)bin_expr->var;
+                    gen_expr(bin_expr_mul->lhs, outfile, stack_s, vars);
+                    gen_expr(bin_expr_mul->rhs, outfile, stack_s, vars);
+                    GENPOP("rax");
+                    GENPOP("rbx");
+                    WRITEOUT("    mul rbx\n");
+                    GENPUSH("rax");
+                    return;
+                }
             }
             return;
         }

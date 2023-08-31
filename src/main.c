@@ -36,6 +36,7 @@ int main(int argc, char* argv[])
     if(!fread(&file_buffer, size, 1, file))
     {
         printf("Unable to read file.\n");
+        fclose(file);
         return 4;
     }
 

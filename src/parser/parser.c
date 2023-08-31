@@ -11,6 +11,35 @@ if(prog.count >= capacity)\
 }\
 prog.stmts[prog.count++] = stmt
 
+#define BIN_EXPR_GEN(node, operator) \
+(*index)++;\
+NodeBinExpr* bin_expr = aalloc(sizeof(NodeBinExpr));\
+node* bin_expr_op = aalloc(sizeof(node));\
+NodeExpr* lhs = aalloc(sizeof(NodeExpr));\
+lhs->type = NODE_EXPR_TERM;\
+lhs->var = term;\
+NodeExpr* rhs = parse_expr(tokens, index);\
+if(rhs == NULL)\
+{\
+    return NULL;\
+}\
+bin_expr_op->lhs = lhs;\
+bin_expr_op->rhs = rhs;\
+bin_expr->type = operator;\
+bin_expr->var = bin_expr_op;\
+NodeExpr* expr = aalloc(sizeof(NodeExpr));\
+expr->type = NODE_EXPR_BIN_EXPR;\
+expr->var = bin_expr;\
+if(rhs->type == NODE_EXPR_BIN_EXPR && ((NodeBinExpr*)rhs->var)->type > operator)\
+{\
+    void* temp = bin_expr_op->lhs;\
+    bin_expr_op->lhs = ((NodeBinExprAdd*)((NodeBinExpr*)rhs->var)->var)->rhs;\
+    ((NodeBinExprAdd*)((NodeBinExpr*)rhs->var)->var)->rhs = temp;\
+    bin_expr->type = ((NodeBinExpr*)rhs->var)->type;\
+    ((NodeBinExpr*)rhs->var)->type = operator;\
+}\
+return expr
+
 NodeTerm* parse_term(Token* tokens, int* index)
 {
     if(tokens[*index].type == TOKEN_INTLIT)
@@ -47,25 +76,11 @@ NodeExpr* parse_expr(Token* tokens, int* index)
     }
     if(tokens[*index].type == TOKEN_PLUS)
     {
-        (*index)++;
-        NodeBinExpr* bin_expr = aalloc(sizeof(NodeBinExpr));
-        NodeBinExprAdd* bin_expr_add = aalloc(sizeof(NodeBinExprAdd));
-        NodeExpr* lhs = aalloc(sizeof(NodeExpr));
-        lhs->type = NODE_EXPR_TERM;
-        lhs->var = term;
-        bin_expr_add->lhs = lhs;
-        NodeExpr* rhs = parse_expr(tokens, index);
-        if(rhs == NULL)
-        {
-            return NULL;
-        }
-        bin_expr_add->rhs = rhs;
-        bin_expr->type = NODE_BIN_EXPR_ADD;
-        bin_expr->var = bin_expr_add;
-        NodeExpr* expr = aalloc(sizeof(NodeExpr));
-        expr->type = NODE_EXPR_BIN_EXPR;
-        expr->var = bin_expr;
-        return expr;
+        BIN_EXPR_GEN(NodeBinExprAdd, NODE_BIN_EXPR_ADD);
+    }
+    else if(tokens[*index].type == TOKEN_MUL)
+    {
+        BIN_EXPR_GEN(NodeBinExprMul, NODE_BIN_EXPR_MUL);
     }
     else
     {

@@ -14,7 +14,7 @@ tokens[token_count++] = token
 
 #define ADD_TOKEN_TYPE(type) \
 index++;\
-Token token = {type};\
+Token token = {type, ""};\
 token.line = line;\
 ADD_TOKEN(token)
 
@@ -23,7 +23,7 @@ Token* tokenize(char* src, int length)
     printf("Started tokenizing...\n");
     int token_count = 0;
     int token_capacity = 8;
-    Token* tokens = malloc(sizeof(Token) * 8);
+    Token* tokens = malloc(sizeof(Token) * token_capacity);
     char buffer[11];
     int buf_index = 0;
     int index = 0;
@@ -40,7 +40,7 @@ Token* tokenize(char* src, int length)
             buffer[buf_index] = 0;
             if(!strcmp(buffer, "exit"))
             {
-                Token token = {TOKEN_EXIT, "\0"};
+                Token token = {TOKEN_EXIT, ""};
                 token.line = line;
                 ADD_TOKEN(token);
                 buf_index = 0;
@@ -48,7 +48,7 @@ Token* tokenize(char* src, int length)
             }
             else if(!strcmp(buffer, "let"))
             {
-                Token token = {TOKEN_LET, "\0"};
+                Token token = {TOKEN_LET, ""};
                 token.line = line;
                 ADD_TOKEN(token);
                 buf_index = 0;
@@ -56,7 +56,7 @@ Token* tokenize(char* src, int length)
             }
             else
             {
-                Token token = {TOKEN_IDENT};
+                Token token = {TOKEN_IDENT, ""};
                 token.line = line;
                 strcpy(token.value, buffer);
                 ADD_TOKEN(token);
@@ -72,7 +72,7 @@ Token* tokenize(char* src, int length)
                 buffer[buf_index++] = src[index++];
             }
             buffer[buf_index] = 0;
-            Token token = {TOKEN_INTLIT};
+            Token token = {TOKEN_INTLIT, ""};
             token.line = line;
             strcpy(token.value, buffer);
             ADD_TOKEN(token);
@@ -102,6 +102,11 @@ Token* tokenize(char* src, int length)
         else if(src[index] == '+')
         {
             ADD_TOKEN_TYPE(TOKEN_PLUS);
+            continue;
+        }
+        else if(src[index] == '*')
+        {
+            ADD_TOKEN_TYPE(TOKEN_MUL);
             continue;
         }
         else if(src[index] == '\n')

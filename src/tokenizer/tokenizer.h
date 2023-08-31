@@ -11,6 +11,7 @@ typedef enum {
     TOKEN_LET,
     TOKEN_EQ,
     TOKEN_PLUS,
+    TOKEN_MUL,
 } TokenType;
 
 typedef struct {

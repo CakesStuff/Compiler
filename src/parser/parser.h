@@ -15,10 +15,10 @@ typedef struct {
     void* rhs;
 } NodeBinExprAdd;
 
-//typedef struct {
-//    void* lhs;
-//    void* rhs;
-//} NodeBinExprMul;
+typedef struct {
+    void* lhs;
+    void* rhs;
+} NodeBinExprMul;
 
 typedef struct {
     int type;
@@ -55,8 +55,8 @@ typedef struct {
 } NodeProg;
 
 enum NodeBinExprOptions {
+    NODE_BIN_EXPR_MUL,
     NODE_BIN_EXPR_ADD,
-    //NODE_BIN_EXPR_MUL
 };
 
 enum NodeTermOptions {
