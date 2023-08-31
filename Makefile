@@ -1,7 +1,7 @@
 HEADERS_C=$(shell find . -type f -name "*.h")
 SOURCES_C=$(shell find . -type f -name "*.c")
 
-.PHONY: all compiler run debug
+.PHONY: all compiler run debug test
 
 all: always compiler
 
@@ -30,3 +30,5 @@ debug: always compiler
 	@ld -o out o.o
 	@rm o.o
 	
+test: always compiler
+	@build/compiler source.dl /dev/stdout
