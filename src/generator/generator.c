@@ -58,7 +58,7 @@ void gen_term(NodeTerm* term, FILE* outfile, int* stack_s, Vars* vars)
             WRITEOUT("    push QWORD [rsp + ");
             char buffer[20];
             sprintf(buffer, "%d", ((*stack_s) - I->loc - 1) * 8);
-            WRITEOUT(buffer);
+            fwrite(buffer, strlen(buffer), 1, outfile);
             WRITEOUT("]\n");
             return;
         }
@@ -147,12 +147,12 @@ void gen_prog(NodeProg prog, FILE* outfile)
     int stack_s = 0;
 
     Vars vars;
-    vars.cap = prog.count * sizeof(Ident);
+    vars.cap = prog.count;
     vars.i_index = 0;
-    vars.idents = malloc(vars.cap);
+    vars.idents = malloc(vars.cap  * sizeof(Ident));
     for(int i = 0; i < vars.cap; i++)
     {
-        vars.idents[i].name = "\0";
+        vars.idents[i].name = "";
     }
 
     WRITEOUT("global _start\n_start:\n");
