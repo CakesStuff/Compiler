@@ -108,7 +108,7 @@ void gen_expr(NodeExpr* expr, FILE* outfile, int* stack_s, Vars* vars)
                     gen_expr(bin_expr_mul->rhs, outfile, stack_s, vars);
                     GENPOP("rax");
                     GENPOP("rbx");
-                    WRITEOUT("    mul rbx\n");
+                    WRITEOUT("    imul rbx\n");
                     GENPUSH("rax");
                     return;
                 }
@@ -119,7 +119,7 @@ void gen_expr(NodeExpr* expr, FILE* outfile, int* stack_s, Vars* vars)
                     gen_expr(bin_expr_div->lhs, outfile, stack_s, vars);
                     GENPOP("rax");
                     GENPOP("rbx");
-                    WRITEOUT("    xor rdx, rdx\n    div rbx\n");
+                    WRITEOUT("    xor rdx, rdx\n    idiv rbx\n");
                     GENPUSH("rax");
                     return;
                 }
