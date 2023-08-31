@@ -104,9 +104,19 @@ Token* tokenize(char* src, int length)
             ADD_TOKEN_TYPE(TOKEN_PLUS);
             continue;
         }
+        else if(src[index] == '-')
+        {
+            ADD_TOKEN_TYPE(TOKEN_MINUS);
+            continue;
+        }
         else if(src[index] == '*')
         {
             ADD_TOKEN_TYPE(TOKEN_MUL);
+            continue;
+        }
+        else if(src[index] == '/')
+        {
+            ADD_TOKEN_TYPE(TOKEN_DIV);
             continue;
         }
         else if(src[index] == '\n')

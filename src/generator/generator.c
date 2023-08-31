@@ -90,6 +90,17 @@ void gen_expr(NodeExpr* expr, FILE* outfile, int* stack_s, Vars* vars)
                     GENPUSH("rax");
                     return;
                 }
+                case NODE_BIN_EXPR_SUB:
+                {
+                    NodeBinExprSub* bin_expr_sub = (NodeBinExprSub*)bin_expr->var;
+                    gen_expr(bin_expr_sub->lhs, outfile, stack_s, vars);
+                    gen_expr(bin_expr_sub->rhs, outfile, stack_s, vars);
+                    GENPOP("rax");
+                    GENPOP("rbx");
+                    WRITEOUT("    sub rax, rbx\n");
+                    GENPUSH("rax");
+                    return;
+                }
                 case NODE_BIN_EXPR_MUL:
                 {
                     NodeBinExprMul* bin_expr_mul = (NodeBinExprMul*)bin_expr->var;
@@ -98,6 +109,17 @@ void gen_expr(NodeExpr* expr, FILE* outfile, int* stack_s, Vars* vars)
                     GENPOP("rax");
                     GENPOP("rbx");
                     WRITEOUT("    mul rbx\n");
+                    GENPUSH("rax");
+                    return;
+                }
+                case NODE_BIN_EXPR_DIV:
+                {
+                    NodeBinExprDiv* bin_expr_div = (NodeBinExprDiv*)bin_expr->var;
+                    gen_expr(bin_expr_div->rhs, outfile, stack_s, vars);
+                    gen_expr(bin_expr_div->lhs, outfile, stack_s, vars);
+                    GENPOP("rax");
+                    GENPOP("rbx");
+                    WRITEOUT("    xor rdx, rdx\n    div rbx\n");
                     GENPUSH("rax");
                     return;
                 }

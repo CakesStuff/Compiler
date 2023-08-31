@@ -34,7 +34,8 @@ if(rhs->type == NODE_EXPR_BIN_EXPR && ((NodeBinExpr*)rhs->var)->type > operator)
 {\
     void* temp = bin_expr_op->lhs;\
     bin_expr_op->lhs = ((NodeBinExprAdd*)((NodeBinExpr*)rhs->var)->var)->rhs;\
-    ((NodeBinExprAdd*)((NodeBinExpr*)rhs->var)->var)->rhs = temp;\
+    ((NodeBinExprAdd*)((NodeBinExpr*)rhs->var)->var)->rhs = ((NodeBinExprAdd*)((NodeBinExpr*)rhs->var)->var)->lhs;\
+    ((NodeBinExprAdd*)((NodeBinExpr*)rhs->var)->var)->lhs = temp;\
     bin_expr->type = ((NodeBinExpr*)rhs->var)->type;\
     ((NodeBinExpr*)rhs->var)->type = operator;\
 }\
@@ -78,9 +79,17 @@ NodeExpr* parse_expr(Token* tokens, int* index)
     {
         BIN_EXPR_GEN(NodeBinExprAdd, NODE_BIN_EXPR_ADD);
     }
+    else if(tokens[*index].type == TOKEN_MINUS)
+    {
+        BIN_EXPR_GEN(NodeBinExprSub, NODE_BIN_EXPR_SUB);
+    }
     else if(tokens[*index].type == TOKEN_MUL)
     {
         BIN_EXPR_GEN(NodeBinExprMul, NODE_BIN_EXPR_MUL);
+    }
+    else if(tokens[*index].type == TOKEN_DIV)
+    {
+        BIN_EXPR_GEN(NodeBinExprDiv, NODE_BIN_EXPR_DIV);
     }
     else
     {
