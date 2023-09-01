@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "tokenizer/tokenizer.h"
 #include "parser/parser.h"
 #include "parser/arena_allocator/allocator.h"
@@ -65,7 +66,7 @@ int main(int argc, char* argv[])
     free(tokens);
 
     //GENERATOR
-    FILE* out_file = fopen(argv[2], "w");
+    FILE* out_file = fopen("out.asm", "w");
     if(out_file == NULL)
     {
         printf("Could not open outfile %s.\n", argv[2]);
@@ -82,5 +83,19 @@ int main(int argc, char* argv[])
 
     aclose();
     free(program.stmts);
+
+    system("nasm -felf64 out.asm");
+
+    char* ldStart = "ld -o ";
+    //TODO: ADD STDLIB HERE
+    char* ldEnd = " out.o";
+    char ldBuf[strlen(ldStart) + strlen(argv[2]) + strlen(ldEnd) + 1];
+
+    strcpy(ldBuf, ldStart);
+    strcpy(ldBuf + strlen(ldStart), argv[2]);
+    strcpy(ldBuf + strlen(ldStart) + strlen(argv[2]), ldEnd);
+
+    system(ldBuf);
+
     return 0;
 }

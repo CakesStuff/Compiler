@@ -17,18 +17,14 @@ clean:
 	@rm -rf build
 
 run: always compiler
-	@build/compiler source.dl o.asm
-	@nasm -felf64 o.asm
-	@rm o.asm
-	@ld -o out o.o
-	@rm o.o
+	@build/compiler source.dl out
+	@rm out.asm
+	@rm out.o
 
 debug: always compiler
-	@valgrind build/compiler source.dl o.asm
-	@nasm -felf64 o.asm
-	@rm o.asm
-	@ld -o out o.o
-	@rm o.o
+	@valgrind build/compiler source.dl out
+	@rm out.asm
+	@rm out.o
 	
 test: always compiler
 	@build/compiler source.dl /dev/stdout
