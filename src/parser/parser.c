@@ -116,6 +116,7 @@ NodeProg parse(Token* tokens)
             stmt_exit->expr = parse_expr(tokens, &index);
             if(stmt_exit->expr == NULL)
             {
+                free(prog.stmts);
                 NodeProg ret = {NULL};
                 return ret;
             }
@@ -124,12 +125,14 @@ NodeProg parse(Token* tokens)
             if(tokens[index++].type != TOKEN_CLOSEP)
             {
                 printf("Expected ')' in line %d.\n", tokens[index - 1].line);
+                free(prog.stmts);
                 NodeProg ret = {NULL};
                 return ret;
             }
             if(tokens[index++].type != TOKEN_SEMI)
             {
                 printf("Expected ';' in line %d.\n", tokens[index - 1].line);
+                free(prog.stmts);
                 NodeProg ret = {NULL};
                 return ret;
             }
@@ -143,12 +146,14 @@ NodeProg parse(Token* tokens)
             stmt_let->expr = parse_expr(tokens, &index);
             if(stmt_let->expr == NULL)
             {
+                free(prog.stmts);
                 NodeProg ret = {NULL};
                 return ret;
             }
             if(tokens[index++].type != TOKEN_SEMI)
             {
                 printf("Expected ';' in line %d.\n", tokens[index - 1].line);
+                free(prog.stmts);
                 NodeProg ret = {NULL};
                 return ret;
             }
@@ -158,6 +163,7 @@ NodeProg parse(Token* tokens)
         else
         {
             printf("Unrecognized sequence starting with node %d at line %d.\n", tokens[index].type, tokens[index].line);
+            free(prog.stmts);
             NodeProg ret = {NULL};
             return ret;
         }
