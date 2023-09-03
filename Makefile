@@ -27,4 +27,4 @@ debug: always compiler
 	@rm out.o
 	
 test: always compiler
-	@build/compiler source.dl /dev/stdout
+	@build/compiler source.dl /dev/null

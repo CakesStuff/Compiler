@@ -69,7 +69,7 @@ int main(int argc, char* argv[])
     FILE* out_file = fopen("out.asm", "w");
     if(out_file == NULL)
     {
-        printf("Could not open outfile %s.\n", argv[2]);
+        printf("Could not open outfile %s.\n", "out.asm");
         aclose();
         free(program.stmts);
         return 7;
