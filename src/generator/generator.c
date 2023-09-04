@@ -45,7 +45,7 @@ void gen_term(NodeTerm* term, FILE* outfile, int* stack_s, Vars* vars)
             NodeTermStrLit* str_lit = term->var;
             char* buffer = malloc(7);
             sprintf(buffer, "str%d", vars->i_index);
-            fprintf(vars->data, "%s db \"%s\", 0Ah\n", buffer, str_lit->str_lit.value);
+            fprintf(vars->data, "%s db \"%s\", 0Ah, 0\n", buffer, str_lit->str_lit.value);
             WRITEOUT("    push ");
             fwrite(buffer, strlen(buffer), 1, outfile);
             WRITEOUT("\n");
