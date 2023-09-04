@@ -54,7 +54,7 @@ typedef struct {
 } NodeStmtExit;
 
 typedef struct {
-    NodeTermStrLit* str_lit;
+    NodeExpr* expr;
 } NodeStmtPrint;
 
 typedef struct {

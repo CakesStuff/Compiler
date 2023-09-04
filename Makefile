@@ -31,7 +31,6 @@ run: all
 
 debug: all
 	@valgrind build/compiler source.dl out
-	@rm out.asm
 	@rm out.o
 	
 test: all

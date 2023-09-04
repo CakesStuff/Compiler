@@ -27,6 +27,7 @@ typedef struct {
     int cap;
     int i_index;
     Ident* idents;
+    FILE* data;
 } Vars;
 
 void gen_term(NodeTerm* term, FILE* outfile, int* stack_s, Vars* vars)
@@ -39,6 +40,19 @@ void gen_term(NodeTerm* term, FILE* outfile, int* stack_s, Vars* vars)
             WRITEOUT("\n");
             GENPUSH("rax");
             return;
+        case NODE_TERM_STR_LIT:
+        {
+            NodeTermStrLit* str_lit = term->var;
+            char* buffer = malloc(7);
+            sprintf(buffer, "str%d", vars->i_index);
+            fprintf(vars->data, "%s db \"%s\", 0Ah\n", buffer, str_lit->str_lit.value);
+            WRITEOUT("    push ");
+            fwrite(buffer, strlen(buffer), 1, outfile);
+            WRITEOUT("\n");
+            (*stack_s)++;
+            free(buffer);
+            return;
+        }
         case NODE_TERM_IDENT:
         {
             Ident* I = NULL;
@@ -143,7 +157,9 @@ void gen_stmt(NodeStmt stmt, FILE* outfile, int* stack_s, Vars* vars)
             WRITEOUT("    syscall\n");
             return;
         case NODE_STMT_PRINT:
-            printf("PRINT NOT IMPLEMENTED YET.\n");
+            gen_expr(((NodeStmtPrint*)stmt.var)->expr, outfile, stack_s, vars);
+            WRITEOUT("    call print\n");
+            (*stack_s)--;
             return;
         case NODE_STMT_LET:
         {
@@ -188,8 +204,9 @@ void gen_prog(NodeProg prog, FILE* outfile)
     {
         vars.idents[i].name = "";
     }
+    vars.data = fopen("out.inc", "w");
 
-    WRITEOUT("global _start\n_start:\n");
+    WRITEOUT("extern print\nglobal _start\n_start:\n");
 
     for(int i = 0; i < prog.count; i++)
     {
@@ -197,8 +214,9 @@ void gen_prog(NodeProg prog, FILE* outfile)
     }
 
     free(vars.idents);
+    fclose(vars.data);
 
-    WRITEOUT("    mov rax, 60\n    mov rdi, 0\n    syscall\n");
+    WRITEOUT("    mov rax, 60\n    mov rdi, 0\n    syscall\n%include \"out.inc\"\n");
 
     printf("Generation finished.\n");
 }

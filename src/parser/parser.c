@@ -52,6 +52,15 @@ NodeTerm* parse_term(Token* tokens, int* index)
         term->var = term_int_lit;
         return term;
     }
+    else if(tokens[*index].type == TOKEN_STRLIT)
+    {
+        NodeTermStrLit* term_str_lit = aalloc(sizeof(NodeTermStrLit));
+        term_str_lit->str_lit = tokens[(*index)++];
+        NodeTerm* term = aalloc(sizeof(NodeTerm));
+        term->type = NODE_TERM_STR_LIT;
+        term->var = term_str_lit;
+        return term;
+    }
     else if(tokens[*index].type == TOKEN_IDENT)
     {
         NodeTermIdent* term_ident = aalloc(sizeof(NodeTermIdent));
@@ -141,14 +150,7 @@ NodeProg parse(Token* tokens)
         {
             index += 2;
             NodeStmtPrint* stmt_print = aalloc(sizeof(NodeStmtPrint));
-            if(tokens[index].type != TOKEN_STRLIT)
-            {
-                free(prog.stmts);
-                NodeProg ret = {NULL};
-                return ret;
-            }
-            stmt_print->str_lit = aalloc(sizeof(NodeTermStrLit));
-            stmt_print->str_lit->str_lit = tokens[index++];
+            stmt_print->expr = parse_expr(tokens, &index);
             NodeStmt stmt = {NODE_STMT_PRINT, stmt_print};
             ADD_STMT(stmt);
             if(tokens[index++].type != TOKEN_CLOSEP)

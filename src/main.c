@@ -88,7 +88,7 @@ int main(int argc, char* argv[])
 
     char* ldStart = "ld -o ";
     //TODO: ADD STDLIB HERE
-    char* ldEnd = " out.o";
+    char* ldEnd = " out.o build/stdlib/print.obj";
     char ldBuf[strlen(ldStart) + strlen(argv[2]) + strlen(ldEnd) + 1];
 
     strcpy(ldBuf, ldStart);
@@ -96,6 +96,7 @@ int main(int argc, char* argv[])
     strcpy(ldBuf + strlen(ldStart) + strlen(argv[2]), ldEnd);
 
     system(ldBuf);
+    system("rm out.inc");
 
     return 0;
 }
