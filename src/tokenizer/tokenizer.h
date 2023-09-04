@@ -14,6 +14,8 @@ typedef enum {
     TOKEN_MINUS,
     TOKEN_MUL,
     TOKEN_DIV,
+    TOKEN_PRINT,
+    TOKEN_STRLIT,
 } TokenType;
 
 typedef struct {

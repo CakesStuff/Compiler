@@ -142,6 +142,9 @@ void gen_stmt(NodeStmt stmt, FILE* outfile, int* stack_s, Vars* vars)
             GENPOP("rdi");
             WRITEOUT("    syscall\n");
             return;
+        case NODE_STMT_PRINT:
+            printf("PRINT NOT IMPLEMENTED YET.\n");
+            return;
         case NODE_STMT_LET:
         {
             int found = 0;

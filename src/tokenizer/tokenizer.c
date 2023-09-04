@@ -46,6 +46,14 @@ Token* tokenize(char* src, int length)
                 buf_index = 0;
                 continue;
             }
+            else if(!strcmp(buffer, "print"))
+            {
+                Token token = {TOKEN_PRINT, ""};
+                token.line = line;
+                ADD_TOKEN(token);
+                buf_index = 0;
+                continue;
+            }
             else if(!strcmp(buffer, "let"))
             {
                 Token token = {TOKEN_LET, ""};
@@ -117,6 +125,28 @@ Token* tokenize(char* src, int length)
         else if(src[index] == '/')
         {
             ADD_TOKEN_TYPE(TOKEN_DIV);
+            continue;
+        }
+        else if(src[index] == '"')
+        {
+            index++;
+            while(index < length && src[index] != '"' && buf_index < 10)
+            {
+                buffer[buf_index++] = src[index++];
+            }
+            if(src[index] != '"')
+            {
+                printf("Too big string literal at line %d.\n", line);
+                free(tokens);
+                return NULL;
+            }
+            index++;
+            buffer[buf_index] = 0;
+            Token token = {TOKEN_STRLIT, ""};
+            token.line = line;
+            strcpy(token.value, buffer);
+            ADD_TOKEN(token);
+            buf_index = 0;
             continue;
         }
         else if(src[index] == '\n')

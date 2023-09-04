@@ -137,6 +137,35 @@ NodeProg parse(Token* tokens)
                 return ret;
             }
         }
+        else if(tokens[index].type == TOKEN_PRINT && tokens[index + 1].type == TOKEN_OPENP)
+        {
+            index += 2;
+            NodeStmtPrint* stmt_print = aalloc(sizeof(NodeStmtPrint));
+            if(tokens[index].type != TOKEN_STRLIT)
+            {
+                free(prog.stmts);
+                NodeProg ret = {NULL};
+                return ret;
+            }
+            stmt_print->str_lit = aalloc(sizeof(NodeTermStrLit));
+            stmt_print->str_lit->str_lit = tokens[index++];
+            NodeStmt stmt = {NODE_STMT_PRINT, stmt_print};
+            ADD_STMT(stmt);
+            if(tokens[index++].type != TOKEN_CLOSEP)
+            {
+                printf("Expected ')' in line %d.\n", tokens[index - 1].line);
+                free(prog.stmts);
+                NodeProg ret = {NULL};
+                return ret;
+            }
+            if(tokens[index++].type != TOKEN_SEMI)
+            {
+                printf("Expected ';' in line %d.\n", tokens[index - 1].line);
+                free(prog.stmts);
+                NodeProg ret = {NULL};
+                return ret;
+            }
+        }
         else if(tokens[index].type == TOKEN_LET && tokens[index + 1].type == TOKEN_IDENT && tokens[index + 2].type == TOKEN_EQ)
         {
             index++;

@@ -7,6 +7,10 @@ typedef struct {
 } NodeTermIntLit;
 
 typedef struct {
+    Token str_lit;
+} NodeTermStrLit;
+
+typedef struct {
     Token ident;
 } NodeTermIdent;
 
@@ -50,6 +54,10 @@ typedef struct {
 } NodeStmtExit;
 
 typedef struct {
+    NodeTermStrLit* str_lit;
+} NodeStmtPrint;
+
+typedef struct {
     Token ident;
     NodeExpr* expr;
 } NodeStmtLet;
@@ -73,6 +81,7 @@ enum NodeBinExprOptions {
 
 enum NodeTermOptions {
     NODE_TERM_INT_LIT,
+    NODE_TERM_STR_LIT,
     NODE_TERM_IDENT,
 };
 
@@ -83,6 +92,7 @@ enum NodeExprOptions {
 
 enum NodeStmtOptions {
     NODE_STMT_EXIT,
+    NODE_STMT_PRINT,
     NODE_STMT_LET,
 };
 
