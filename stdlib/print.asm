@@ -1,7 +1,7 @@
 bits 64
 
-global print
-print:
+global prints
+prints:
     mov rax, 1
     mov rdi, 1
     mov rdx, 1

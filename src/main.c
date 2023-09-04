@@ -87,7 +87,6 @@ int main(int argc, char* argv[])
     system("nasm -felf64 out.asm");
 
     char* ldStart = "ld -o ";
-    //TODO: ADD STDLIB HERE
     char* ldEnd = " out.o build/stdlib/print.obj";
     char ldBuf[strlen(ldStart) + strlen(argv[2]) + strlen(ldEnd) + 1];
 

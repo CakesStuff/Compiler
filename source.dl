@@ -1,6 +1,7 @@
 let x = 20 * 2 + 2;
 let y = x * 2;
-let str = "RETURN 42:";
-print(str);
-print(str + 2);
+//Print return 42:
+let str = "RETURN 42:\n";
+prints(str);
+prints(str + 2);
 exit(y / 2);

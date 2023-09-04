@@ -45,7 +45,18 @@ void gen_term(NodeTerm* term, FILE* outfile, int* stack_s, Vars* vars)
             NodeTermStrLit* str_lit = term->var;
             char* buffer = malloc(7);
             sprintf(buffer, "str%d", vars->i_index);
-            fprintf(vars->data, "%s db \"%s\", 0Ah, 0\n", buffer, str_lit->str_lit.value);
+            fprintf(vars->data, "%s db \"", buffer);
+            for(int i = 0; i < strlen(str_lit->str_lit.value); i++)
+            {
+                if(str_lit->str_lit.value[i] == '\\' && str_lit->str_lit.value[i + 1] == 'n')
+                {
+                    fprintf(vars->data, "\", 0Ah, \"");
+                    i++;
+                    continue;
+                }
+                fprintf(vars->data, "%c", str_lit->str_lit.value[i]);
+            }
+            fprintf(vars->data, "\", 0\n");
             WRITEOUT("    push ");
             fwrite(buffer, strlen(buffer), 1, outfile);
             WRITEOUT("\n");
@@ -158,7 +169,7 @@ void gen_stmt(NodeStmt stmt, FILE* outfile, int* stack_s, Vars* vars)
             return;
         case NODE_STMT_PRINT:
             gen_expr(((NodeStmtPrint*)stmt.var)->expr, outfile, stack_s, vars);
-            WRITEOUT("    call print\n");
+            WRITEOUT("    call prints\n");
             (*stack_s)--;
             return;
         case NODE_STMT_LET:
@@ -206,7 +217,7 @@ void gen_prog(NodeProg prog, FILE* outfile)
     }
     vars.data = fopen("out.inc", "w");
 
-    WRITEOUT("extern print\nglobal _start\n_start:\n");
+    WRITEOUT("extern prints\nglobal _start\n_start:\n");
 
     for(int i = 0; i < prog.count; i++)
     {

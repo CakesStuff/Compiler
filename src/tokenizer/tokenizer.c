@@ -24,7 +24,7 @@ Token* tokenize(char* src, int length)
     int token_count = 0;
     int token_capacity = 8;
     Token* tokens = malloc(sizeof(Token) * token_capacity);
-    char buffer[11];
+    char buffer[51];
     int buf_index = 0;
     int index = 0;
     int line = 1;
@@ -33,7 +33,7 @@ Token* tokenize(char* src, int length)
         if(isalpha(src[index]))
         {
             buffer[buf_index++] = src[index++];
-            while(index < length && buf_index < 10 && isalnum(src[index]))
+            while(index < length && buf_index < 50 && isalnum(src[index]))
             {
                 buffer[buf_index++] = src[index++];
             }
@@ -46,7 +46,7 @@ Token* tokenize(char* src, int length)
                 buf_index = 0;
                 continue;
             }
-            else if(!strcmp(buffer, "print"))
+            else if(!strcmp(buffer, "prints"))
             {
                 Token token = {TOKEN_PRINT, ""};
                 token.line = line;
@@ -75,7 +75,7 @@ Token* tokenize(char* src, int length)
         else if(isdigit(src[index]))
         {
             buffer[buf_index++] = src[index++];
-            while(index < length && buf_index < 10 && isdigit(src[index]))
+            while(index < length && buf_index < 50 && isdigit(src[index]))
             {
                 buffer[buf_index++] = src[index++];
             }
@@ -124,13 +124,18 @@ Token* tokenize(char* src, int length)
         }
         else if(src[index] == '/')
         {
+            if((index + 1) < length && src[index + 1] == '/')
+            {
+                while(index < length && src[index++] != '\n');
+                continue;
+            }
             ADD_TOKEN_TYPE(TOKEN_DIV);
             continue;
         }
         else if(src[index] == '"')
         {
             index++;
-            while(index < length && src[index] != '"' && buf_index < 10)
+            while(index < length && src[index] != '"' && buf_index < 50)
             {
                 buffer[buf_index++] = src[index++];
             }
